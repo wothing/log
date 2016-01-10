@@ -38,12 +38,12 @@ const (
 )
 
 var levels = []string{
-	"[DEBUG]",
+	"[DEBU]",
 	"[INFO]",
 	"[WARN]",
-	"[ERROR]",
-	"[PANIC]",
-	"[FATAL]",
+	"[ERRO]",
+	"[PANI]",
+	"[FATA]",
 }
 
 // A Logger represents an active logging object that generates lines of
@@ -98,9 +98,9 @@ func itoa(buf *bytes.Buffer, i int, wid int) {
 func moduleOf(file string) string {
 	pos := strings.LastIndex(file, "/")
 	if pos != -1 {
-		pos1 := strings.LastIndex(file[:pos], "/src/")
+		pos1 := strings.LastIndex(file[:pos], "/src/github.com/wothing/")
 		if pos1 != -1 {
-			return file[pos1+5 : pos]
+			return file[pos1+24 : pos]   // ignore /src/github.com/wothing/
 		}
 	}
 	return "UNKNOWN"
@@ -134,13 +134,13 @@ func (l *Logger) formatHeader(buf *bytes.Buffer, t time.Time, file string, line 
 			buf.WriteByte(' ')
 		}
 	}
+	if l.flag&Llevel != 0 {
+		buf.WriteString(levels[lvl])
+	}
 	if reqId != "" {
 		buf.WriteByte('[')
 		buf.WriteString(reqId)
 		buf.WriteByte(']')
-	}
-	if l.flag&Llevel != 0 {
-		buf.WriteString(levels[lvl])
 	}
 	if l.flag&Lmodule != 0 {
 		buf.WriteByte('[')
