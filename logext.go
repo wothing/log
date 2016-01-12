@@ -137,11 +137,12 @@ func (l *Logger) formatHeader(buf *bytes.Buffer, t time.Time, file string, line 
 	if l.flag&Llevel != 0 {
 		buf.WriteString(levels[lvl])
 	}
-	if reqId != "" {
+	//if reqId != "" {
+		// Write reqId always
 		buf.WriteByte('[')
 		buf.WriteString(reqId)
 		buf.WriteByte(']')
-	}
+	//}
 	if l.flag&Lmodule != 0 {
 		buf.WriteByte('[')
 		buf.WriteString(moduleOf(file))
