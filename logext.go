@@ -100,7 +100,7 @@ func moduleOf(file string) string {
 	if pos != -1 {
 		pos1 := strings.LastIndex(file[:pos], "/src/github.com/wothing/")
 		if pos1 != -1 {
-			return file[pos1+24 : pos]   // ignore /src/github.com/wothing/
+			return file[pos1+24 : pos] // ignore /src/github.com/wothing/
 		}
 	}
 	return "UNKNOWN"
@@ -138,10 +138,10 @@ func (l *Logger) formatHeader(buf *bytes.Buffer, t time.Time, file string, line 
 		buf.WriteString(levels[lvl])
 	}
 	//if reqId != "" {
-		// Write reqId always
-		buf.WriteByte('[')
-		buf.WriteString(reqId)
-		buf.WriteByte(']')
+	// Write reqId always
+	buf.WriteByte('[')
+	buf.WriteString(reqId)
+	buf.WriteByte(']')
 	//}
 	if l.flag&Lmodule != 0 {
 		buf.WriteByte('[')

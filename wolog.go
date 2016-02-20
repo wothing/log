@@ -13,12 +13,12 @@ func (l *Logger) Tprintf(traceID string, format string, v ...interface{}) {
 	l.Output(traceID, Linfo, 2, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Tprint(traceID string, v ...interface{}) { 
-	l.Output(traceID, Linfo, 2, fmt.Sprint(v...)) 
+func (l *Logger) Tprint(traceID string, v ...interface{}) {
+	l.Output(traceID, Linfo, 2, fmt.Sprint(v...))
 }
 
-func (l *Logger) Tprintln(traceID string, v ...interface{}) { 
-	l.Output(traceID, Linfo, 2, fmt.Sprintln(v...)) 
+func (l *Logger) Tprintln(traceID string, v ...interface{}) {
+	l.Output(traceID, Linfo, 2, fmt.Sprintln(v...))
 }
 
 func (l *Logger) Tdebugf(traceID string, format string, v ...interface{}) {
@@ -53,16 +53,16 @@ func (l *Logger) Twarnf(traceID string, format string, v ...interface{}) {
 	l.Output(traceID, Lwarn, 2, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Twarn(traceID string, v ...interface{}) { 
-	l.Output(traceID, Lwarn, 2, fmt.Sprintln(v...)) 
+func (l *Logger) Twarn(traceID string, v ...interface{}) {
+	l.Output(traceID, Lwarn, 2, fmt.Sprintln(v...))
 }
 
 func (l *Logger) Terrorf(traceID string, format string, v ...interface{}) {
 	l.Output(traceID, Lerror, 2, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Terror(traceID string, v ...interface{}) { 
-	l.Output(traceID, Lerror, 2, fmt.Sprintln(v...)) 
+func (l *Logger) Terror(traceID string, v ...interface{}) {
+	l.Output(traceID, Lerror, 2, fmt.Sprintln(v...))
 }
 
 func (l *Logger) Tfatal(traceID string, v ...interface{}) {
@@ -152,16 +152,16 @@ func Twarnf(traceID string, format string, v ...interface{}) {
 	Std.Output(traceID, Lwarn, 2, fmt.Sprintf(format, v...))
 }
 
-func Twarn(traceID string, v ...interface{}) { 
-	Std.Output(traceID, Lwarn, 2, fmt.Sprintln(v...)) 
+func Twarn(traceID string, v ...interface{}) {
+	Std.Output(traceID, Lwarn, 2, fmt.Sprintln(v...))
 }
 
 func Terrorf(traceID string, format string, v ...interface{}) {
 	Std.Output(traceID, Lerror, 2, fmt.Sprintf(format, v...))
 }
 
-func Terror(traceID string, v ...interface{}) { 
-	Std.Output(traceID, Lerror, 2, fmt.Sprintln(v...)) 
+func Terror(traceID string, v ...interface{}) {
+	Std.Output(traceID, Lerror, 2, fmt.Sprintln(v...))
 }
 
 func Tfatal(traceID string, v ...interface{}) {
