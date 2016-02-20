@@ -16,7 +16,7 @@ import (
 
 func TraceIn(traceID string, service string, format string, v ...interface{}) (string, string, time.Time) {
 	startTime := time.Now()
-	Std.Output(traceID, Linfo, 2, fmt.Sprintf(service+", "+format, v...))
+	Std.Output(traceID, Linfo, 2, fmt.Sprintf("calling "+service+", "+format, v...))
 	return traceID, service, startTime
 }
 
