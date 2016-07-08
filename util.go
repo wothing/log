@@ -7,47 +7,87 @@ import (
 )
 
 // PrintStruct tries walk struct return formatted string
-func PrintStruct(s interface{}) string {
-	b := &bytes.Buffer{}
-	v := reflect.ValueOf(s)
-	if v.Kind() == reflect.Ptr {
-		b.WriteString("&")
-		v = reflect.Indirect(v)
+func PrintStruct(x interface{}) string {
+	buff := bytes.NewBuffer([]byte{})
+	if err := encode(buff, reflect.ValueOf(x)); err != nil {
+		return err.Error()
 	}
+	return buff.String()
+}
 
-	t := v.Type()
+func encode(buf *bytes.Buffer, v reflect.Value) error {
+	switch v.Kind() {
+	case reflect.Invalid:
+		buf.WriteString("nil")
 
-	if t.Kind() != reflect.Struct {
-		return fmt.Sprint(s)
-	}
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		fmt.Fprintf(buf, "%d", v.Int())
 
-	b.WriteString(v.Type().String())
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		fmt.Fprintf(buf, "%d", v.Uint())
 
-	b.WriteString("{")
-	for i, l := 0, v.NumField(); i < l; i++ {
-		if i > 0 {
-			b.WriteString(" ")
-		}
+	case reflect.String:
+		fmt.Fprintf(buf, "%q", v.String())
 
-		// field name
-		b.WriteString(t.Field(i).Name)
-		b.WriteString(":")
+	case reflect.Bool:
+		fmt.Fprintf(buf, "%t", v.Bool())
 
-		v2 := v.Field(i)
+	case reflect.Float32, reflect.Float64:
+		fmt.Fprintf(buf, "%g", v.Float())
 
-		switch v2.Kind() {
-		case reflect.Ptr, reflect.Interface:
-			if v2.Elem().IsValid() {
-				b.WriteString(PrintStruct(v2.Interface()))
-			} else {
-				b.WriteString("nil")
+	case reflect.Ptr:
+		buf.WriteByte('&')
+		return encode(buf, v.Elem())
+
+	case reflect.Array, reflect.Slice:
+		buf.WriteString(v.Type().String())
+		buf.WriteByte('{')
+		for i := 0; i < v.Len(); i++ {
+			if i > 0 {
+				buf.WriteString(", ")
 			}
-		case reflect.Struct:
-			b.WriteString(PrintStruct(v2.Interface()))
-		default:
-			b.WriteString(fmt.Sprint(v2))
+			if err := encode(buf, v.Index(i)); err != nil {
+				return err
+			}
 		}
+		buf.WriteByte('}')
+
+	case reflect.Struct:
+		buf.WriteString(v.Type().String())
+		buf.WriteByte('{')
+		for i := 0; i < v.NumField(); i++ {
+			if i > 0 {
+				buf.WriteString(", ")
+			}
+			fmt.Fprintf(buf, "%s:", v.Type().Field(i).Name)
+			if err := encode(buf, v.Field(i)); err != nil {
+				return err
+			}
+		}
+		buf.WriteByte('}')
+
+	case reflect.Map:
+		buf.WriteString(v.Type().String())
+		buf.WriteByte('{')
+		for i, key := range v.MapKeys() {
+			if i > 0 {
+				buf.WriteString(", ")
+			}
+			if err := encode(buf, key); err != nil {
+				return err
+			}
+			buf.WriteByte(':')
+			if err := encode(buf, v.MapIndex(key)); err != nil {
+				return err
+			}
+		}
+		buf.WriteByte('}')
+
+	case reflect.Interface:
+		return encode(buf, v.Elem())
+
+	default: // complex, chan, func
+		return fmt.Errorf("unsupported type: %s", v.Type())
 	}
-	b.WriteString("}")
-	return b.String()
+	return nil
 }
