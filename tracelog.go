@@ -19,12 +19,12 @@ import (
 
 func TraceIn(traceID string, service string, format string, v ...interface{}) (string, string, time.Time) {
 	startTime := time.Now()
-	Std.Output(traceID, Linfo, 2, fmt.Sprintf("calling "+service+", "+format, v...))
+	Std.Output(traceID, Linfo, fmt.Sprintf("calling "+service+", "+format, v...))
 	return traceID, service, startTime
 }
 
 func TraceOut(traceID string, service string, startTime time.Time) {
-	Std.Output(traceID, Linfo, 2, fmt.Sprintf("finished "+service+", took=%v", time.Since(startTime)))
+	Std.Output(traceID, Linfo, fmt.Sprintf("finished "+service+", took=%v", time.Since(startTime)))
 }
 
 func TraceCtx(ctx context.Context, service string, format string, v ...interface{}) (string, string, time.Time) {
@@ -36,6 +36,6 @@ func TraceCtx(ctx context.Context, service string, format string, v ...interface
 	}
 
 	startTime := time.Now()
-	Std.Output(traceID, Linfo, 2, fmt.Sprintf("calling "+service+", "+format, v...))
+	Std.Output(traceID, Linfo, fmt.Sprintf("calling "+service+", "+format, v...))
 	return traceID, service, startTime
 }
