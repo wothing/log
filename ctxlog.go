@@ -16,13 +16,7 @@ func getTracerIDFromCtx(ctx context.Context) string {
 		return nid
 	}
 
-	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		if md["tid"] != nil && len(md["tid"]) > 0 {
-			return md["tid"][0]
-		}
-	}
-
-	if md, ok := metadata.FromOutgoingContext(ctx); ok {
+	if md, ok := metadata.FromContext(ctx); ok {
 		if md["tid"] != nil && len(md["tid"]) > 0 {
 			return md["tid"][0]
 		}
