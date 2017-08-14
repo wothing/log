@@ -10,18 +10,25 @@ import (
 )
 
 func getTracerIDFromCtx(ctx context.Context) string {
-	nid := "00000000-0000-0000-0000-000000000000"
-
 	if ctx == nil {
-		return nid
+		return "00000000-0000-0000-0000-000000000NIL"
 	}
 
-	if md, ok := metadata.FromContext(ctx); ok {
+	// incoming
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if md["tid"] != nil && len(md["tid"]) > 0 {
 			return md["tid"][0]
 		}
 	}
-	return nid
+
+	// outgoing
+	if md, ok := metadata.FromOutgoingContext(ctx); ok {
+		if md["tid"] != nil && len(md["tid"]) > 0 {
+			return md["tid"][0]
+		}
+	}
+
+	return "00000000-0000-0000-0000-000000000000"
 }
 
 func (l *Logger) CtxDebugf(ctx context.Context, format string, v ...interface{}) {
