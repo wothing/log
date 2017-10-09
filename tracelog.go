@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
-	"google.golang.org/grpc/metadata"
 )
 
 // TraceIn and TraceOut use in function in and out,reduce code line
@@ -28,14 +27,8 @@ func TraceOut(traceID string, service string, startTime time.Time) {
 }
 
 func TraceCtx(ctx context.Context, service string, format string, v ...interface{}) (string, string, time.Time) {
-	traceID := ""
-	if md, ok := metadata.FromContext(ctx); ok {
-		if md["tid"] != nil && len(md["tid"]) > 0 {
-			traceID = md["tid"][0]
-		}
-	}
-
 	startTime := time.Now()
+	traceID := getTracerIDFromCtx(ctx)
 	Std.Output(traceID, Linfo, 2, fmt.Sprintf("calling "+service+", "+format, v...))
 	return traceID, service, startTime
 }
